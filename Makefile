@@ -1,4 +1,4 @@
-DIRS = lib fileio filesystem stdio
+DIRS = lib fileio filesystem #stdio
 
 all:
 	for i in $(DIRS); do \
