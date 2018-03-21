@@ -159,4 +159,30 @@ inline bool PathBuffer::is_dir() const {
         return false;
     return S_ISDIR(_stat.st_mode);
 }
+/* 实验结果
+$ time ./myftw /usr/ 2>err
+regular files   =  213481, 65.74 %
+directories     =   44607, 13.74 %
+block special   =       0,  0.00 %
+char special    =       0,  0.00 %
+FIFOs           =       0,  0.00 %
+symbol links    =   66624, 20.52 %
+sockets         =       0,  0.00 %
 
+real	0m7.017s
+user	0m0.044s
+sys	0m3.364s
+
+$ time ./myftw_chdir /usr/ 2>err
+regular files   =  213481, 65.74 %
+directories     =   44607, 13.74 %
+block special   =       0,  0.00 %
+char special    =       0,  0.00 %
+FIFOs           =       0,  0.00 %
+symbol links    =   66624, 20.52 %
+sockets         =       0,  0.00 %
+
+real	0m0.605s
+user	0m0.076s
+sys	0m0.520s
+*/

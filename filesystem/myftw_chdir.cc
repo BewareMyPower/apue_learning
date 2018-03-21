@@ -112,91 +112,29 @@ static bool myftw(const char* pathname) {
 }
 
 /* 实验结果
-$ time ./myftw /usr/
-regular files   =  213476, 65.74 %
-directories     =   44606, 13.74 %
+$ time ./myftw /usr/ 2>err
+regular files   =  213481, 65.74 %
+directories     =   44607, 13.74 %
 block special   =       0,  0.00 %
 char special    =       0,  0.00 %
 FIFOs           =       0,  0.00 %
 symbol links    =   66624, 20.52 %
 sockets         =       0,  0.00 %
 
-real	0m18.717s
-user	0m0.016s
-sys	0m9.964s
+real	0m7.017s
+user	0m0.044s
+sys	0m3.364s
 
-$ time ./myftw_chdir /usr/
-regular files   =  213476, 65.74 %
-directories     =   44606, 13.74 %
+$ time ./myftw_chdir /usr/ 2>err
+regular files   =  213481, 65.74 %
+directories     =   44607, 13.74 %
 block special   =       0,  0.00 %
 char special    =       0,  0.00 %
 FIFOs           =       0,  0.00 %
 symbol links    =   66624, 20.52 %
 sockets         =       0,  0.00 %
 
-real	0m14.769s
-user	0m0.056s
-sys	0m7.740s
-
-$ time ./myftw .
-regular files   =   17442, 85.58 %
-directories     =    2786, 13.67 %
-block special   =       0,  0.00 %
-char special    =       0,  0.00 %
-FIFOs           =       0,  0.00 %
-symbol links    =     152,  0.75 %
-sockets         =       1,  0.00 %
-
-real	0m0.933s
-user	0m0.016s
-sys	0m0.484s
-
-$ time ./myftw_chdir .
-regular files   =   17442, 85.58 %
-directories     =    2786, 13.67 %
-block special   =       0,  0.00 %
-char special    =       0,  0.00 %
-FIFOs           =       0,  0.00 %
-symbol links    =     152,  0.75 %
-sockets         =       1,  0.00 %
-
-real	0m0.044s
-user	0m0.000s
-sys	0m0.044s
-
-$ time ./myftw /etc
-can't read directory /etc/polkit-1/localauthority: Permission denied
-can't read directory /etc/ssl/private: Permission denied
-can't read directory /etc/cups/ssl: Permission denied
-regular files   =    1680, 55.28 %
-directories     =     342, 11.25 %
-block special   =       0,  0.00 %
-char special    =       0,  0.00 %
-FIFOs           =       0,  0.00 %
-symbol links    =    1017, 33.46 %
-sockets         =       0,  0.00 %
-
-real	0m0.206s
-user	0m0.000s
-sys	0m0.120s
-
-$ time ./myftw_chdir /etc/
-localauthority: chdir error: Permission denied
-private: chdir error: Permission denied
-ssl: chdir error: Permission denied
-regular files   =    1680, 55.28 %
-directories     =     342, 11.25 %
-block special   =       0,  0.00 %
-char special    =       0,  0.00 %
-FIFOs           =       0,  0.00 %
-symbol links    =    1017, 33.46 %
-sockets         =       0,  0.00 %
-
-real	0m0.009s
-user	0m0.000s
-sys	0m0.008s
-
+real	0m0.605s
+user	0m0.076s
+sys	0m0.520s
 */
-/** 结果分析
- * 每次先chdir进入子目录，递归完后chdir("..")跳回来的方法更快
- */
