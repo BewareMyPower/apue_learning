@@ -1,0 +1,5 @@
+# 定义编译所有程序所用到的变量，其中ROOT和EXTRA由包含该文件的Makefile定义
+CC=g++
+FLAGS=-std=c++11 -Wall -I$(ROOT)/include -D_GNU_SOURCE $(EXTRA)
+MAKE=make
+LIBUTIL=$(ROOT)/lib/libutil.a
