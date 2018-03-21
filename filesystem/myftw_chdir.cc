@@ -20,7 +20,7 @@ enum ftw_state {
 
 int main(int argc, char* argv[]) {
     if (argc != 2)
-        err_quit("usage: myftw <starting-pathname>");
+        err_quit("usage: %s <starting-pathname>", argv[0]);
     myftw(argv[1]);
 
     ntot = nreg + ndir + nblk + nchr + nfifo + nslink + nsock;
