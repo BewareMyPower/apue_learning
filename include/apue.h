@@ -23,4 +23,7 @@
 // 系统调用的包裹函数
 #include "func_wrapper.h"
 
+// 打印终止状态的描述信息
+#include "pr_exit.h"
+
 #endif

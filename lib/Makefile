@@ -4,7 +4,7 @@
 ROOT=..
 include $(ROOT)/Make.defines
 
-OBJS = flag_op.o func_wrapper.o
+OBJS = flag_op.o func_wrapper.o pr_exit.o
 LIBMISC = libutil.a
 
 all: $(LIBMISC)
