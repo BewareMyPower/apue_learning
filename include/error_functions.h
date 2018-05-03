@@ -1,7 +1,35 @@
 #ifndef _ERROR_FUNCTIONS_H_
 #define _ERROR_FUNCTIONS_H_
 
-#include "format_string.h"
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+#include <errno.h>
+
+#include <string>
+#include <vector>
+
+/**
+ * 功能: 用类似printf的方式构建C++标准字符串
+ * 参数: 同printf(3)的输入参数
+ * 返回: 调用printf(format, args...)时打印到屏幕上的字符串
+ */
+template <typename ...Args>
+inline std::string format_string(const char* format, Args... args) {
+    constexpr size_t oldlen = BUFSIZ;
+    char buffer[oldlen];  // 默认栈上的缓冲区
+
+    size_t newlen = snprintf(&buffer[0], oldlen, format, args...);
+    newlen++;  // 算上终止符'\0'
+
+    if (newlen > oldlen) {  // 默认缓冲区不够大，从堆上分配
+        std::vector<char> newbuffer(newlen);
+        snprintf(newbuffer.data(), newlen, format, args...);
+        return std::string(newbuffer.data());
+    }
+
+    return buffer;
+}
 
 /**
  * 非致命性错误，系统调用无关
@@ -9,11 +37,12 @@
  */
 template <typename ...Args>
 inline void err_msg(const char* fmt, Args... args) {
-    try {
-        throw_error(fmt, std::forward<Args>(args)...);
-    } catch (std::runtime_error& e) {
-        fprintf(stderr, "%s\n", e.what());
-    }
+    auto msg = format_string(fmt, args...);
+    fprintf(stderr, "%s\n", msg.c_str());
+}
+
+inline void err_msg(const char* msg) {
+    fprintf(stderr, "%s\n", msg);
 }
 
 /**
@@ -22,11 +51,17 @@ inline void err_msg(const char* fmt, Args... args) {
  */
 template <typename ...Args>
 inline void err_ret(const char* fmt, Args... args) {
-    try {
-        throw_syserror(fmt, std::forward<Args>(args)...);
-    } catch (std::runtime_error& e) {
-        fprintf(stderr, "%s\n", e.what());
-    }
+    std::string msg = format_string(fmt, args...);
+    msg.append(": ");
+    msg.append(strerror(errno));
+    fprintf(stderr, "%s\n", msg.c_str());
+}
+
+inline void err_ret(const char* msg) {
+    std::string msg_with_errno = msg;
+    msg_with_errno.append(": ");
+    msg_with_errno.append(strerror(errno));
+    fprintf(stderr, "%s\n", msg_with_errno.c_str());
 }
 
 /**
@@ -36,11 +71,10 @@ inline void err_ret(const char* fmt, Args... args) {
  */
 template <typename ...Args>
 inline void err_cont(int error, const char* fmt, Args... args) {
-    try {
-        throw_syserror(error, fmt, std::forward<Args>(args)...);
-    } catch (std::runtime_error& e) {
-        fprintf(stderr, "%s\n", e.what());
-    }
+    auto msg = format_string(fmt, args...);
+    msg.append(": ");
+    msg.append(strerror(error));
+    fprintf(stderr, "%s\n", msg.c_str());
 }
 
 /**
