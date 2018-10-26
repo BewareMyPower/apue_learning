@@ -77,6 +77,10 @@ inline void err_cont(int error, const char* fmt, Args... args) {
     fprintf(stderr, "%s\n", msg.c_str());
 }
 
+inline void err_cont(int error, const char* msg) {
+    err_cont(error, "%s", msg);
+}
+
 /**
  * 致命性错误，系统调用无关
  * 打印消息后终止进程
@@ -87,6 +91,10 @@ inline void err_quit(const char* fmt, Args... args) {
     exit(1);
 }
 
+inline void err_quit(const char* msg) {
+    err_quit("%s", msg);
+}
+
 /**
  * 致命性错误，系统调用相关
  * 打印消息后终止进程
@@ -95,6 +103,10 @@ template <typename ...Args>
 inline void err_sys(const char* fmt, Args... args) {
     err_ret(fmt, std::forward<Args>(args)...);
     exit(1);
+}
+
+inline void err_sys(const char* msg) {
+    err_sys("%s", msg);
 }
 
 /**
@@ -108,6 +120,10 @@ inline void err_exit(int error, const char* fmt, Args... args) {
     exit(1);
 }
 
+inline void err_exit(int error, const char* msg) {
+    err_exit(error, "%s", msg);
+}
+
 /**
  * 致命性错误，系统调用相关
  * 打印消息，转储核心后后终止进程
@@ -116,6 +132,10 @@ template <typename ...Args>
 inline void err_dump(const char* fmt, Args... args) {
     err_ret(fmt, std::forward<Args>(args)...);
     abort();
+}
+
+inline void err_dump(const char* msg) {
+    err_dump("%s", msg);
 }
 
 #endif
